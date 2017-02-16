@@ -1,0 +1,8 @@
+{
+  "verbose": "false",
+  "watch": [
+    "webpack.config.js",
+    "index.js",
+    "package.json"
+  ]
+}
