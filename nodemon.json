@@ -3,6 +3,7 @@
   "watch": [
     "webpack.config.js",
     "index.js",
-    "package.json"
+    "package.json",
+    "server"
   ]
 }

@@ -1,8 +1,12 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import GuestAddDialog from './GuestAddDialog';
 import TextField from 'material-ui/TextField';
+
+import {SaveGuest} from 'ducks/modules/Guests';
 
 class GuestAdd extends Component {
   constructor(props) {
@@ -38,7 +42,10 @@ class GuestAdd extends Component {
   };
 
   handleSubmit () {
-    console.log(this.state.firstName, this.state.lastName)
+    this.props.SaveGuest({
+      firstName: this.state.firstName,
+      lastName: this.state.lastName
+    })
   }
 
   render() {
@@ -62,4 +69,14 @@ class GuestAdd extends Component {
   }
 }
 
-export default GuestAdd;
+const mapStateToProps = ({Guests}) => {
+  return {
+    Guests
+  };
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return bindActionCreators({SaveGuest}, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(GuestAdd);

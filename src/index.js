@@ -1,12 +1,17 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {Router, browserHistory} from 'react-router';
+import {Provider} from 'react-redux';
+
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {blueGrey500, blueGrey700} from 'material-ui/styles/colors';
 import 'assets/styles/app.scss';
 import routes from 'routes';
+import configureStore from 'store/configureStore';
+
+const store = configureStore();
 
 import App from './app';
 
@@ -22,7 +27,9 @@ const muiTheme = getMuiTheme({
 
 render(
   <MuiThemeProvider muiTheme={muiTheme}>
-    <Router routes={routes} history={browserHistory}/>
+    <Provider store={store}>
+      <Router routes={routes} history={browserHistory}/>
+    </Provider>
   </MuiThemeProvider>,
   document.getElementById('App')
 )
