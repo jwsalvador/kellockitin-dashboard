@@ -8,8 +8,9 @@ import TextField from 'material-ui/TextField';
 import {List} from 'material-ui/List';
 import GuestAdd from './GuestAdd';
 import ListItem from 'components/ListItem';
+import FlatButton from 'material-ui/FlatButton';
 
-import {FetchGuests} from 'ducks/modules/Guests';
+import {FetchGuests, LinkGuests} from 'ducks/modules/Guests';
 
 class GuestsList extends Component {
   constructor(props) {
@@ -20,25 +21,33 @@ class GuestsList extends Component {
   }
 
   componentWillMount() {
-    console.log(this.props.guests)
+    console.log('componentwillmount');
     this.state = {
       guests: this.props.guests,
       search: '',
-      showCheckbox: false
+      showCheckbox: false,
+      mainLink: ''
     }
 
     this.handleSearch = this.handleSearch.bind(this);
     this.toggleCheckbox = this.toggleCheckbox.bind(this);
-    this.handleAddGuest = this.handleAddGuest.bind(this);
+    this.handleAddGuestGroup = this.handleAddGuestGroup.bind(this);
+    this.handleCancelGuestGroup = this.handleCancelGuestGroup.bind(this);
+    this.handleLinkGuests = this.handleLinkGuests.bind(this);
   }
 
-  componentWillReceiveProps() {
-    this.setState({guests: this.props.guests});
+  componentWillReceiveProps(nextProps) {
+    console.log('componentwillreceiveprops', nextProps)
+    this.setState({guests: nextProps.guests});
   }
 
-  handleAddGuest() {
-    console.log('add guest')
-    this.setState({showCheckbox:true});
+  handleAddGuestGroup(e, id) {
+    this.setState({showCheckbox:true, mainLink: id});
+  }
+
+  handleCancelGuestGroup() {
+    this.selectedCheckboxes = new Set();
+    this.setState({showCheckbox: false, mainLink: ''});
   }
 
   handleSearch(e, value) {
@@ -50,9 +59,19 @@ class GuestsList extends Component {
     })
   }
 
+  handleLinkGuests() {
+    this.props.LinkGuests([this.state.mainLink, ...this.selectedCheckboxes]);
+  }
+
   toggleCheckbox(e, isChecked) {
+    const val = e.target.attributes.data.value;
+    
     if (isChecked) {
-      console.log(e.target.attributes.data.value);
+      if (!this.selectedCheckboxes.has(val)) {
+        this.selectedCheckboxes.add(val);
+      }
+    } else {
+      this.selectedCheckboxes.delete(val);
     }
   }
 
@@ -70,19 +89,29 @@ class GuestsList extends Component {
     
   }
 
+  renderLinkGuests() {
+    return (
+      <div>
+        <FlatButton label="Link" secondary={true} onClick={this.handleLinkGuests}/>
+        <FlatButton label="Cancel" primary={true} onClick={this.handleCancelGuestGroup}/>
+      </div>
+    );
+  }
+
   renderGuestsList() {
     return (
       <div style={{width: '30%'}}>
         <TextField onChange={this.handleSearch} floatingLabelText="Search"/>
+        { this.state.showCheckbox && this.renderLinkGuests() }
         <List>
-          {this.state.guests.map(m => {
+          {this.state.guests.filter(m => m._id !== this.state.mainLink).map(m => {
             return <ListItem 
               key={m._id} 
               id={m._id}
               primaryText={`${m.firstName} ${m.lastName}`}
               onCheckHandler={this.toggleCheckbox}
               showCheckbox={this.state.showCheckbox}
-              handleAddGuest={this.handleAddGuest}
+              handleAddGuestGroup={this.handleAddGuestGroup}
               />
           })}
         </List>
@@ -105,7 +134,7 @@ class GuestsList extends Component {
 }
 
 const mapStateToProps = ({Guests}) => {
-  console.log(Guests)
+  console.log('mapstatetoprops', Guests);
   return {
     filtered: Guests.all,
     guests: Guests.all,
@@ -114,7 +143,7 @@ const mapStateToProps = ({Guests}) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({FetchGuests}, dispatch);
+  return bindActionCreators({FetchGuests, LinkGuests}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GuestsList);

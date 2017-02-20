@@ -16,19 +16,19 @@ const iconButtonElement = (
   </IconButton>
 );
 
-const rightIconMenu = (handleAddGuest) => {
+const rightIconMenu = (handleAddGuestGroup, id) => {
   return (<IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>Add</MenuItem>
-    <MenuItem onClick={handleAddGuest}>Add to</MenuItem>
+    <MenuItem>Add Guests</MenuItem>
+    <MenuItem onClick={() => handleAddGuestGroup(this, id)}>Link Guests</MenuItem>
     <MenuItem>Delete</MenuItem>
-  </IconMenu>)
+  </IconMenu>);
 };
 
-const Item = ({showCheckbox, id, primaryText, onCheckHandler, handleAddGuest}) => {
+const Item = ({showCheckbox, id, primaryText, onCheckHandler, handleAddGuestGroup}) => {
   return (
     <ListItem 
       primaryText={primaryText}
-      rightIconButton={rightIconMenu(handleAddGuest)}
+      {...showCheckbox ? {} : {rightIconButton: rightIconMenu(handleAddGuestGroup, id)}}
       {...showCheckbox ? {leftCheckbox: (<Checkbox data={id}
       onCheck={onCheckHandler}/>)} : {}}
       />
