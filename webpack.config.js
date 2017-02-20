@@ -6,7 +6,7 @@ module.exports = {
 
   entry: [
     'webpack-hot-middleware/client?reload=true',
-    './src/index.js'
+    './src/index.jsx'
   ],
 
   output: {

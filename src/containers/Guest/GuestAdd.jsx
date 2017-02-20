@@ -5,6 +5,7 @@ import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import GuestAddDialog from './GuestAddDialog';
 import TextField from 'material-ui/TextField';
+import Snackbar from 'material-ui/Snackbar';
 
 import {SaveGuest} from 'ducks/modules/Guests';
 
@@ -15,10 +16,12 @@ class GuestAdd extends Component {
     this.state = {
       open: false,
       firstName: '',
-      lastName: ''
+      lastName: '',
+      snackBar: false
     }
 
     this.handleOpen = this.handleOpen.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.changeFirstNameStateHandler = this.changeFirstNameStateHandler.bind(this);
@@ -33,6 +36,12 @@ class GuestAdd extends Component {
     this.setState({lastName: value});
   }
 
+  handleRequestClose() {
+    this.setState({
+      snackBar: false,
+    });
+  };
+
   handleOpen() {
     this.setState({open: true});
   };
@@ -45,7 +54,9 @@ class GuestAdd extends Component {
     this.props.SaveGuest({
       firstName: this.state.firstName,
       lastName: this.state.lastName
-    })
+    });
+
+    this.setState({open: false, snackBar: true});
   }
 
   render() {
@@ -64,6 +75,12 @@ class GuestAdd extends Component {
           <TextField onChange={this.changeFirstNameStateHandler} floatingLabelText="First name"/><br />
           <TextField onChange={this.changeLastNameStateHandler} floatingLabelText="Last name"/><br />
         </GuestAddDialog>
+        <Snackbar
+          open={this.state.snackBar}
+          message="Guest added to your list"
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
       </div>
     );
   }

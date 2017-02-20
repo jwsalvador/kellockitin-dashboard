@@ -2,6 +2,7 @@ import React from 'react';
 import {render} from 'react-dom';
 import {Router, browserHistory} from 'react-router';
 import {Provider} from 'react-redux';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -10,8 +11,12 @@ import {blueGrey500, blueGrey700} from 'material-ui/styles/colors';
 import 'assets/styles/app.scss';
 import routes from 'routes';
 import configureStore from 'store/configureStore';
+import {FetchGuests} from 'ducks/modules/Guests';
 
 const store = configureStore();
+store.dispatch(FetchGuests());
+
+injectTapEventPlugin();
 
 import App from './app';
 
