@@ -24,13 +24,16 @@ const rightIconMenu = (handleAddGuestGroup, id) => {
   </IconMenu>);
 };
 
-const Item = ({showCheckbox, id, primaryText, onCheckHandler, handleAddGuestGroup}) => {
+const Item = ({showCheckbox, id, primaryText, onCheckHandler, onClick, handleAddGuestGroup, disableMenuItems, secondaryText}) => {
+  console.log(secondaryText);
   return (
     <ListItem 
       primaryText={primaryText}
-      {...showCheckbox ? {} : {rightIconButton: rightIconMenu(handleAddGuestGroup, id)}}
+      {...showCheckbox || disableMenuItems ? {} : {rightIconButton: rightIconMenu(handleAddGuestGroup, id)}}
       {...showCheckbox ? {leftCheckbox: (<Checkbox data={id}
       onCheck={onCheckHandler}/>)} : {}}
+      onClick={() => onClick(this, id)}
+      {...secondaryText}
       />
   );
 };

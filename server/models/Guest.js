@@ -6,7 +6,8 @@ const guestSchema = new Schema({
   lastName: String,
   groupId: String,
   diet: String,
-  message: String
+  message: String,
+  rsvp: String
 });
 
 module.exports = mongoose.model('Guests', guestSchema);
