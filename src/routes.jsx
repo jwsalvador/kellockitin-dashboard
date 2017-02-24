@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, IndexRoute} from 'react-router';
 
 import App from 'app';
-import Dashboard from 'containers/Dashboard';
+import Dashboard from 'containers/Dashboard/Dashboard';
 import GuestsList from 'containers/Guest/GuestsList';
 
 export default (

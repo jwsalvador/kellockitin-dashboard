@@ -1,19 +1,21 @@
 import React from 'react';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton  from 'material-ui/RaisedButton';
 
-const GuestAddDialog = ({children, handleClose, handleSubmit, open, disableSubmit}) => {
+
+const GuestAddDialog = ({children, handleClose, handleSubmit, open, disableSubmit, form}) => {
   const actions = [
       <FlatButton
         label="Cancel"
         primary={true}
         onClick={handleClose}
       />,
-      <FlatButton
+      <RaisedButton 
+        onClick={(e) => {debugger;}}
         label="Submit"
         primary={true}
         disabled={disableSubmit}
-        onClick={handleSubmit}
       />,
     ];
 
@@ -24,6 +26,7 @@ const GuestAddDialog = ({children, handleClose, handleSubmit, open, disableSubmi
           actions={actions}
           modal={true}
           open={open}>
+            
             {children}
           </Dialog>
     </div>

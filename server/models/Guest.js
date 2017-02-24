@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const guestSchema = new Schema({
   firstName: String,
   lastName: String,
+  type: String,
   groupId: String,
   diet: String,
   message: String,
