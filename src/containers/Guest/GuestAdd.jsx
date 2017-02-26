@@ -3,11 +3,13 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import GuestAddDialog from './GuestAddDialog';
 import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton  from 'material-ui/RaisedButton';
 import Snackbar from 'material-ui/Snackbar';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
+import Dialog from 'material-ui/Dialog';
 
 import {SaveGuest} from 'ducks/modules/Guests';
 
@@ -16,16 +18,13 @@ class GuestAdd extends Component {
     super(props);
     
     this.state = {
-      open: false,
       firstName: '',
       lastName: '',
       type: '',
       snackBar: false
     }
 
-    this.handleOpen = this.handleOpen.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
-    this.handleClose = this.handleClose.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.changeFirstNameStateHandler = this.changeFirstNameStateHandler.bind(this);
     this.changeLastNameStateHandler = this.changeLastNameStateHandler.bind(this);
@@ -36,7 +35,7 @@ class GuestAdd extends Component {
     this.setState({firstName: value});
   }
 
-  changeLastNameStateHandler(event, {value}) {
+  changeLastNameStateHandler(event, value) {
     this.setState({lastName: value});
   }
 
@@ -50,14 +49,6 @@ class GuestAdd extends Component {
     });
   };
 
-  handleOpen() {
-    this.setState({open: true});
-  };
-
-  handleClose () {
-    this.setState({open: false});
-  };
-
   handleSubmit () {
     this.props.SaveGuest({
       firstName: this.state.firstName,
@@ -65,23 +56,34 @@ class GuestAdd extends Component {
       type: this.state.type
     });
 
-    this.setState({open: false, snackBar: true});
+    this.props.close();
+
+    this.setState({snackBar: true});
   }
 
   render() {
     const style = {position: 'absolute', right: '30px', top: '-30px'};
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onClick={this.props.close}
+      />,
+      <RaisedButton 
+        onClick={this.handleSubmit}
+        label="Submit"
+        primary={true}
+        disabled={!this.state.firstName && !this.state.lastName}
+      />,
+    ];
 
     return (
       <div>
-        <FloatingActionButton secondary={true} style={style} onClick={this.handleOpen}>
-          <ContentAdd />
-        </FloatingActionButton>
-        <GuestAddDialog 
-          disableSubmit={!this.state.firstName && !this.state.lastName}
-          open={this.state.open} 
-          handleClose={this.handleClose} 
-          handleSubmit={this.handleSubmit}>
-          <form onSubmit={this.handleSubmit}>
+        <Dialog
+          title="Add guest"
+          actions={actions}
+          modal={true}
+          open={this.props.open}>
             <TextField onChange={this.changeFirstNameStateHandler} floatingLabelText="First name"/><br />
             <TextField onChange={this.changeLastNameStateHandler} floatingLabelText="Last name"/><br />
             <SelectField
@@ -92,8 +94,7 @@ class GuestAdd extends Component {
               <MenuItem value="ADT" primaryText="Adult" />
               <MenuItem value="CHD" primaryText="Child" />
             </SelectField>
-          </form>
-        </GuestAddDialog>
+        </Dialog>
         <Snackbar
           open={this.state.snackBar}
           message="Guest added to your list"

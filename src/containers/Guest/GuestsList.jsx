@@ -6,10 +6,15 @@ import TextField from 'material-ui/TextField';
 
 import Toggle from 'material-ui/Toggle';
 import {List} from 'material-ui/List';
-import GuestAdd from './GuestAdd';
 import ListItem from 'components/ListItem';
 import FlatButton from 'material-ui/FlatButton';
-import SocialPerson from 'material-ui/svg-icons/social/person';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
+import GuestProfile from 'containers/Guest/GuestProfile';
+import GuestAdd from 'containers/Guest/GuestAdd';
+import Notification from 'components/Notification';
+
 
 import {FetchGuests, LinkGuests} from 'ducks/modules/Guests';
 
@@ -22,14 +27,16 @@ class GuestsList extends Component {
   }
 
   componentWillMount() {
-    console.log('componentwillmount');
     this.state = {
       guests: this.props.guests,
       search: '',
       showCheckbox: false,
       mainLink: '',
       selected: null,
-      showGroups: false
+      showGroups: false,
+      linkNotification: false,
+      guestAddNotification: false,
+      openDialog: false
     }
 
     this.handleSearch = this.handleSearch.bind(this);
@@ -39,11 +46,22 @@ class GuestsList extends Component {
     this.handleLinkGuests = this.handleLinkGuests.bind(this);
     this.handleShowProfile = this.handleShowProfile.bind(this);
     this.toggleShowGroups = this.toggleShowGroups.bind(this);
+    this.handleRequestClose = this.handleRequestClose.bind(this);
+    this.handleCloseDialog = this.handleCloseDialog.bind(this);
+    this.handleOpenDialog = this.handleOpenDialog.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     console.log('componentwillreceiveprops', nextProps)
     this.setState({guests: nextProps.guests});
+  }
+
+  handleOpenDialog() {
+    this.setState({openDialog: true});
+  };
+
+  handleCloseDialog() {
+    this.setState({openDialog: false});    
   }
 
   handleAddGuestGroup(e, id) {
@@ -55,17 +73,25 @@ class GuestsList extends Component {
     this.setState({showCheckbox: false, mainLink: ''});
   }
 
+  handleRequestClose(state) {
+    this.setState({[state]: false});
+  }
+
   handleSearch(e, value) {
     this.setState({
       search: value,
       guests: value ? 
-        this.props.guests.filter((g) => (`${g.firstName.toLowerCase()} ${g.lastName.toLowerCase()}`).indexOf(value.toLowerCase()) > -1) : 
+        this.props.guests
+          .filter((g) => (`${g.firstName.toLowerCase()} ${g.lastName.toLowerCase()}`).indexOf(value.toLowerCase()) > -1) : 
         this.props.guests
     })
   }
 
   handleLinkGuests() {
+    debugger;
     this.props.LinkGuests([this.state.mainLink, ...this.selectedCheckboxes]);
+    this.setState({showCheckbox: false, mainLink: ''});    
+    this.setState({linkNotification: true});
   }
 
   handleShowProfile(e, id) {
@@ -135,7 +161,7 @@ class GuestsList extends Component {
           <TextField onChange={this.handleSearch} floatingLabelText="Search" />
         </div>
         <div>
-          <Toggle label="Show group" labelPosition="right" labelStyle={{fontSize: '11'}} onToggle={this.toggleShowGroups}/>
+          <Toggle label="Show group" labelPosition="right" labelStyle={{fontSize: 11}} onToggle={this.toggleShowGroups}/>
         </div>
         { this.state.showCheckbox && this.renderLinkGuests() }
         <List className="name">
@@ -162,35 +188,35 @@ class GuestsList extends Component {
   }
 
   renderGuestProfile() {
-    if (!this.state.selected) {
-      return <div className="col-7">Please selected a guest to see their profile.</div>;
-    }
-
-    const {firstName, lastName, rsvp, diet, message} = this.state.selected;
-
-    return (
-      <div className="col-7" style={{textAlign: 'center', padding: '20px'}}>
-        <div><SocialPerson style={{width: '150', height: '150'}}/></div>
-        <h2 className="name">{`${firstName} ${lastName}`}</h2>
-        <h3>{`RSVP: ${rsvp === 'yes' ? 'yes': rsvp === 'no' ? 'no' : 'No status yet'}`}</h3>
-        <h3>{`Dietary Requirements: ${diet ? diet : 'No requirements provided'}`}</h3>
-        <h3>{`Message: ${message ? message : 'No message provided'}`}</h3>
-      </div>
-    );
+    return <GuestProfile selected={this.state.selected}/>;
   }
 
   render() {
+    const style = {position: 'absolute', right: '30px', top: '-30px'};
+
     return (
       <div>
-        <GuestAdd/>
+        <FloatingActionButton secondary={true} style={style} onClick={this.handleOpenDialog}>
+          <ContentAdd />
+        </FloatingActionButton>
+        <GuestAdd open={this.state.openDialog} close={this.handleCloseDialog}/>
         { this.renderGuestsContainer() }
+        <Notification
+          open={this.state.linkNotification}
+          message="Guests linked"
+          handleClose={() => this.handleRequestClose('linkNotification')}
+        />
+        <Notification
+          open={this.state.guestAddNotification}
+          message="Guest added"
+          handleClose={() => this.handleRequestClose('guestAddNotification')}
+        />
       </div>
     );
   }
 }
 
 const mapStateToProps = ({Guests}) => {
-  console.log('mapstatetoprops', Guests);
   return {
     filtered: Guests.all,
     guests: Guests.all,

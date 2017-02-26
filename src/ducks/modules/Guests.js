@@ -16,6 +16,7 @@ const FetchGuests = () => {
 };
 
 const SaveGuest = (guest) => {
+  console.log(guest)
   const request = axios.post('/api/guests', guest);
   return {
     type: SAVE_GUEST,

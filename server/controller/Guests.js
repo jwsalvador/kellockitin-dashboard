@@ -14,14 +14,17 @@ const Save = (req, res) => {
   if (!req.body) {
     return res.send({err: 'No body request found'});
   }
+    console.log(req.body);
+  
 
   req.body.firstName = req.body.firstName.toLowerCase();
   req.body.lastName = req.body.lastName.toLowerCase();
 
   const guests = new Guests(req.body);
 
+  
+
   guests.save((err, g) => {
-    console.log(g);
     res.send({
       guest: g
     });
