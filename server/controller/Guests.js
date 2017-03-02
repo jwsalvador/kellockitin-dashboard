@@ -17,8 +17,8 @@ const Save = (req, res) => {
     console.log(req.body);
   
 
-  req.body.firstName = req.body.firstName.toLowerCase();
-  req.body.lastName = req.body.lastName.toLowerCase();
+  req.body.firstName = req.body.firstName.toLowerCase().trim();
+  req.body.lastName = req.body.lastName.toLowerCase().trim();
 
   const guests = new Guests(req.body);
 
@@ -39,11 +39,16 @@ const Link = (req, res) => {
 
   const mainId = req.body.ids[0];
   console.log(req.body.ids);
-  Guests.update({_id: {'$in': req.body.ids}}, {groupId: mainId}, {multi: true}, (err, updates) => {
-    console.log(updates);
-    res.send({
-      guests: updates
+  Guests.update({_id: {'$in': req.body.ids}}, {groupId: mainId}, {multi: true}, (err, status) => {
+    if (err || status.ok !== 1) {
+      return res.send({guests: null})
+    }
+    Guests.find({_id: {$in: req.body.ids} }, (err, guests) => {
+      return res.send({
+        guests
+      });
     })
+
   });
 };
 

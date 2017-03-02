@@ -40,7 +40,17 @@ const GuestsReducer = (state = initState, action) => {
     case SAVE_GUEST:
       return Object.assign({}, state, {all: [...state.all, action.payload.data.guest]});
     case LINK_GUESTS:
-      return state;
+    debugger;
+    let newArr = [];
+      state.all.forEach((item, i) => {
+        let index = action.payload.data.guests.findIndex(m => m._id === item._id);
+        if (index > -1) {
+          newArr.push(Object.assign({}, action.payload.data.guests[index]));
+        } else {
+          newArr.push(item);
+        }
+      });
+      return Object.assign({}, state, {all: newArr});
 
   }
 

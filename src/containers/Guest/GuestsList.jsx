@@ -32,6 +32,7 @@ class GuestsList extends Component {
       search: '',
       showCheckbox: false,
       mainLink: '',
+      linkId: '',
       selected: null,
       showGroups: false,
       linkNotification: false,
@@ -65,7 +66,13 @@ class GuestsList extends Component {
   }
 
   handleAddGuestGroup(e, id) {
-    this.setState({showCheckbox:true, mainLink: id});
+    const link = this.state.guests.find(m => m._id === id);
+    const linkId = link.groupId || link._id;
+    this.setState({showCheckbox:true, mainLink: id, linkId});
+    this.selectedCheckboxes = new Set();
+    this.state.guests.forEach((m) => {m.groupId === linkId && this.selectedCheckboxes.add(m._id)});
+    console.log(this.selectedCheckboxes);
+    
   }
 
   handleCancelGuestGroup() {
@@ -88,10 +95,10 @@ class GuestsList extends Component {
   }
 
   handleLinkGuests() {
-    debugger;
-    this.props.LinkGuests([this.state.mainLink, ...this.selectedCheckboxes]);
+    this.props.LinkGuests([...this.selectedCheckboxes]);
     this.setState({showCheckbox: false, mainLink: ''});    
     this.setState({linkNotification: true});
+    this.selectedCheckboxes = new Set();
   }
 
   handleShowProfile(e, id) {
@@ -117,6 +124,7 @@ class GuestsList extends Component {
     } else {
       this.selectedCheckboxes.delete(val);
     }
+    console.log(this.selectedCheckboxes);
   }
 
   getGuestListItemAttributes(guest) {
@@ -127,7 +135,8 @@ class GuestsList extends Component {
       onCheckHandler: this.toggleCheckbox,
       showCheckbox: this.state.showCheckbox,
       handleAddGuestGroup: this.handleAddGuestGroup,
-      onClick: this.handleShowProfile
+      onClick: this.handleShowProfile,
+      checked: this.state.mainLink ? this.state.linkId === guest.groupId : false
     }
   }
 
