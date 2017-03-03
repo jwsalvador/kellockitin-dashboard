@@ -68,9 +68,12 @@ class GuestsList extends Component {
   handleAddGuestGroup(e, id) {
     const link = this.state.guests.find(m => m._id === id);
     const linkId = link.groupId || link._id;
+    let set = new Set();
     this.setState({showCheckbox:true, mainLink: id, linkId});
     this.selectedCheckboxes = new Set();
     this.state.guests.forEach((m) => {m.groupId === linkId && this.selectedCheckboxes.add(m._id)});
+    // add default id if group not found
+    this.selectedCheckboxes.size === 0 && this.selectedCheckboxes.add(id);
     console.log(this.selectedCheckboxes);
     
   }
