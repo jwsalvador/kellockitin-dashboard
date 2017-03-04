@@ -4,7 +4,10 @@
   "description": "This is a project to learn react",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cross-env NODE_ENV=production webpack --progress --config ./webpack.prod.config.js",
+    "heroku-postbuild": "npm run build",
+    "build:dev": "npm run build && cross-env NODE_ENV=production node index"
   },
   "author": "John Wesley Salvador",
   "license": "ISC",
@@ -30,12 +33,12 @@
     "redux-thunk": "^2.2.0",
     "sass-loader": "^6.0.0",
     "style-loader": "^0.13.1",
-    "webpack": "^2.2.1",
-    "webpack-dev-middleware": "^1.10.0",
-    "webpack-hot-middleware": "^2.16.1"
+    "webpack": "^2.2.1"
   },
   "devDependencies": {
     "babel-preset-react-hmre": "^1.1.1",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",    
+    "webpack-dev-middleware": "^1.10.0",
+    "webpack-hot-middleware": "^2.16.1"
   }
 }

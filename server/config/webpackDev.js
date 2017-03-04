@@ -1,6 +1,11 @@
 const path = require('path');
 
 const WebpackDevConfig = (app) => {
+
+  if (process.env.NODE_ENV === 'production') {
+    return;
+  }
+
   var webpack = require('webpack');
   var webpackDevMiddleware = require('webpack-dev-middleware');
   var webpackHotMiddleware = require('webpack-hot-middleware');
