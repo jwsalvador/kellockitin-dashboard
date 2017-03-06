@@ -12,6 +12,7 @@
   "author": "John Wesley Salvador",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.1.5",
     "axios": "^0.15.3",
     "babel-cli": "^6.23.0",
     "babel-loader": "^6.3.0",

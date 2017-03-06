@@ -20,7 +20,7 @@ class Stats extends Component {
     super(props);
     this.state = {
       value: 'y',
-      list: []
+      list: this.props.guests.filter(n => n.rsvp === 'y')
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -48,10 +48,26 @@ class Stats extends Component {
     });
   };
 
+  showSecondaryText(guest) {
+    switch (this.state.value) {
+      case 'd':
+        return guest.diet;
+      case 'm':
+        return guest.message;
+      default:
+        return '';
+    }
+  }
+
   renderFilteredList() {
     return this.state.list.map(m => {
       return (
-        <ListItem key={m._id} style={styles.name} primaryText={`${m.firstName} ${m.lastName}`} />
+        <ListItem 
+          key={m._id} 
+          style={styles.name} 
+          primaryText={`${m.firstName} ${m.lastName}`}
+          insetChildren={true}
+          secondaryText={this.showSecondaryText(m)} />
       )
     });
   }

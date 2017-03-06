@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Guests = mongoose.model('Guests');
+const nodeAsync = require("async");
 
 const Get = (req, res) => {
   Guests.find({}, (err, guests) => {
@@ -10,10 +11,6 @@ const Get = (req, res) => {
 };
 
 const Find = (req, res) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000"); // restrict it to the required domain
-  res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-  // Set custom headers for CORS
-  res.header("Access-Control-Allow-Headers", "Content-type,Accept,X-Custom-Header");
 
   req.body.firstName = req.body.firstName.toLowerCase().trim();
   req.body.lastName = req.body.lastName.toLowerCase().trim();
@@ -34,6 +31,34 @@ const Find = (req, res) => {
       guest
     })
   });
+};
+
+const Rsvp = (req, res) => {
+  console.log(req.body);
+
+  var parallels = [];
+
+  req.body.forEach((item) => {
+    parallels.push((callback) => {
+      Guests.findOneAndUpdate({
+        _id: item.id
+      }, {
+        rsvp: item.rsvp,
+        message: item.message,
+        diet: item.diet
+      }).exec(function(err, model) {
+        callback(err, model)
+      });
+    });
+  });
+
+  // Save all updates in parallel
+  nodeAsync.parallel(parallels, function(err, results) {
+    console.log(results)
+    res.send({
+      success: true
+    });
+  })
 };
 
 const Save = (req, res) => {
@@ -81,5 +106,6 @@ module.exports = {
   Get,
   Save,
   Link,
-  Find
+  Find,
+  Rsvp
 }

@@ -38,11 +38,11 @@ class MainView extends Component {
         <div>
           <Paper style={style} zDepth={2}>
             <h2>Total RSVP</h2>
-            <h1>{filterGuestsBy('rsvp', 'CHD', this.props.guests).length}</h1>
+            <h1>{filterGuestsBy('rsvp', 'y', this.props.guests).length}</h1>
           </Paper>
           <Paper style={style} zDepth={2}>
             <h2>Not Going</h2>
-            <h1>{filterGuestsBy('rsvp', 'CHD', this.props.guests).length}</h1>
+            <h1>{filterGuestsBy('rsvp', 'n', this.props.guests).length}</h1>
           </Paper>
           <Paper style={style} zDepth={2}>
             <h2>No Status</h2>
