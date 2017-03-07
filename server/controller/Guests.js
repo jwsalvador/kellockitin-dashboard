@@ -16,8 +16,8 @@ const Find = (req, res) => {
   req.body.lastName = req.body.lastName.toLowerCase().trim();
 
   Guests.findOne({firstName: req.body.firstName, lastName: req.body.lastName}, (err, guest) => {
-    if (err) {
-      return res.send({err})
+    if (err || !guest) {
+      return res.send({err: 'not found'})
     }
     if (guest.groupId) {
       return Guests.find({groupId: guest.groupId}, (err, group) => {
@@ -34,7 +34,6 @@ const Find = (req, res) => {
 };
 
 const Rsvp = (req, res) => {
-  console.log(req.body);
 
   var parallels = [];
 
@@ -62,7 +61,7 @@ const Rsvp = (req, res) => {
 };
 
 const Save = (req, res) => {
-  
+
   if (!req.body) {
     return res.send({err: 'No body request found'});
   }
@@ -72,7 +71,7 @@ const Save = (req, res) => {
 
   const guests = new Guests(req.body);
 
-  
+
 
   guests.save((err, g) => {
     res.send({
