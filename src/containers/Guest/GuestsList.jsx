@@ -16,7 +16,7 @@ import GuestAdd from 'containers/Guest/GuestAdd';
 import Notification from 'components/Notification';
 
 
-import {FetchGuests, LinkGuests} from 'ducks/modules/Guests';
+import {FetchGuests, LinkGuests, DeleteGuest} from 'ducks/modules/Guests';
 
 class GuestsList extends Component {
   constructor(props) {
@@ -45,6 +45,7 @@ class GuestsList extends Component {
     this.handleAddGuestGroup = this.handleAddGuestGroup.bind(this);
     this.handleCancelGuestGroup = this.handleCancelGuestGroup.bind(this);
     this.handleLinkGuests = this.handleLinkGuests.bind(this);
+    this.handleDeleteGuest = this.handleDeleteGuest.bind(this);
     this.handleShowProfile = this.handleShowProfile.bind(this);
     this.toggleShowGroups = this.toggleShowGroups.bind(this);
     this.handleRequestClose = this.handleRequestClose.bind(this);
@@ -76,6 +77,10 @@ class GuestsList extends Component {
     this.selectedCheckboxes.size === 0 && this.selectedCheckboxes.add(id);
     console.log(this.selectedCheckboxes);
     
+  }
+
+  handleDeleteGuest(e, id) {
+    this.props.DeleteGuest(id);
   }
 
   handleCancelGuestGroup() {
@@ -138,6 +143,7 @@ class GuestsList extends Component {
       onCheckHandler: this.toggleCheckbox,
       showCheckbox: this.state.showCheckbox,
       handleAddGuestGroup: this.handleAddGuestGroup,
+      handleDeleteGuest: this.handleDeleteGuest,
       onClick: this.handleShowProfile,
       checked: this.state.mainLink ? this.state.linkId === guest.groupId : false
     }
@@ -237,7 +243,7 @@ const mapStateToProps = ({Guests}) => {
 };
 
 const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({FetchGuests, LinkGuests}, dispatch);
+  return bindActionCreators({FetchGuests, LinkGuests, DeleteGuest}, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(GuestsList);

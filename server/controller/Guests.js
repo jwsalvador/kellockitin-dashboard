@@ -33,6 +33,15 @@ const Find = (req, res) => {
   });
 };
 
+const Delete = (req, res) => {
+  Guests.findByIdAndRemove(req.params.id, (err, result) => {
+
+    return res.send({
+      status: 'deleted'
+    })
+  });
+}
+
 const Rsvp = (req, res) => {
 
   var parallels = [];
@@ -53,7 +62,6 @@ const Rsvp = (req, res) => {
 
   // Save all updates in parallel
   nodeAsync.parallel(parallels, function(err, results) {
-    console.log(results)
     res.send({
       success: true
     });
@@ -106,5 +114,6 @@ module.exports = {
   Save,
   Link,
   Find,
-  Rsvp
+  Rsvp,
+  Delete
 }

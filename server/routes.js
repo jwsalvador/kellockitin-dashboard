@@ -14,6 +14,7 @@ const RoutesConfig = (app) => {
 
   app.get('/api/guests', Guests.Get);
   app.post('/api/guest', Guests.Find);
+  app.delete('/api/guest/:id', Guests.Delete);
   app.post('/api/guest/rsvp', Guests.Rsvp);
   app.post('/api/guests', Guests.Save);
   app.post('/api/guests/link', Guests.Link);

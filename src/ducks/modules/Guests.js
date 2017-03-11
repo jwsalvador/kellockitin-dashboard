@@ -3,6 +3,7 @@ import axios from 'axios';
 const FETCH_GUESTS = 'FETCH_GUESTS';
 const SAVE_GUEST = 'SAVE_GUEST';
 const LINK_GUESTS = 'LINK_GUESTS';
+const DELETE_GUEST = 'DELETE_GUEST';
 
 const initState = { all: [], selected: null };
 
@@ -16,7 +17,6 @@ const FetchGuests = () => {
 };
 
 const SaveGuest = (guest) => {
-  console.log(guest)
   const request = axios.post('/api/guests', guest);
   return {
     type: SAVE_GUEST,
@@ -33,6 +33,16 @@ const LinkGuests = (ids) => {
   }
 }
 
+const DeleteGuest = (id) => {
+  const request = axios.delete(`/api/guest/${id}`);
+  
+  return {
+    type: DELETE_GUEST,
+    payload: request,
+    id
+  }
+}
+
 const GuestsReducer = (state = initState, action) => {
   switch(action.type) {
     case FETCH_GUESTS:
@@ -40,7 +50,6 @@ const GuestsReducer = (state = initState, action) => {
     case SAVE_GUEST:
       return Object.assign({}, state, {all: [...state.all, action.payload.data.guest]});
     case LINK_GUESTS:
-    debugger;
     let newArr = [];
       state.all.forEach((item, i) => {
         let index = action.payload.data.guests.findIndex(m => m._id === item._id);
@@ -51,7 +60,8 @@ const GuestsReducer = (state = initState, action) => {
         }
       });
       return Object.assign({}, state, {all: newArr});
-
+    case DELETE_GUEST:
+      return Object.assign({}, state, {all: state.all.filter(m => m._id !== action.id)});
   }
 
   return state;
@@ -59,4 +69,4 @@ const GuestsReducer = (state = initState, action) => {
 
 export default GuestsReducer;
 
-export {FetchGuests, SaveGuest, LinkGuests};
+export {FetchGuests, SaveGuest, LinkGuests, DeleteGuest};
