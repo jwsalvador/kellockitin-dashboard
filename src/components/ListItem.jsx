@@ -18,7 +18,6 @@ const iconButtonElement = (
 
 const rightIconMenu = (handleAddGuestGroup, handleDeleteGuest, id) => {
   return (<IconMenu iconButtonElement={iconButtonElement}>
-    <MenuItem>Add Guests</MenuItem>
     <MenuItem onClick={() => handleAddGuestGroup(this, id)}>Link Guests</MenuItem>
     <MenuItem onClick={() => handleDeleteGuest(this, id)}>Delete</MenuItem>
   </IconMenu>);
