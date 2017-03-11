@@ -45,3 +45,12 @@ a {
   box-shadow: 0 9px 20px rgba(0,0,0,.6);
   position: relative;
 }
+
+.stats-messages__list {
+  cursor: pointer;
+  font-weight: 300;
+}
+
+.stats-messages__list:hover {
+  background-color: rgba(0,0,0,.098);
+}

@@ -11,8 +11,18 @@ const styles = {
     fontWeight: 400,
   },
   name: {
-    textTransform: 'capitalize'
-  }
+    textTransform: 'capitalize',
+    fontWeight: 600    
+  },
+  main: {
+    textTransform: 'capitalize',
+    display: 'inline-block',
+    width: '50%',
+  },
+  secondary: {
+    width: '50%',
+    display: 'inline-block'
+} 
 };
 
 class Stats extends Component {
@@ -112,7 +122,18 @@ class Stats extends Component {
             <div>
               <h2 style={styles.headline}>Messages</h2>
               <List>
-                {this.renderFilteredList()}
+                {this.state.list.map(m => {
+                  return (
+                    <div key={m._id} className="stats-messages__list" style={{padding: '20px 40px'}}>
+                      <div style={styles.main}>
+                        {`${m.firstName} ${m.lastName}`}
+                      </div>
+                      <div style={styles.secondary}>
+                        {this.showSecondaryText(m)}
+                      </div>
+                    </div>
+                  )
+                })}
               </List>
             </div>
           </Tab>
