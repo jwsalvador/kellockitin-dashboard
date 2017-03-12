@@ -54,7 +54,6 @@ class GuestsList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('componentwillreceiveprops', nextProps)
     this.setState({guests: nextProps.guests});
   }
 
@@ -132,7 +131,6 @@ class GuestsList extends Component {
     } else {
       this.selectedCheckboxes.delete(val);
     }
-    console.log(this.selectedCheckboxes);
   }
 
   getGuestListItemAttributes(guest) {

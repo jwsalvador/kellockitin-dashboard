@@ -4,6 +4,7 @@ const FETCH_GUESTS = 'FETCH_GUESTS';
 const SAVE_GUEST = 'SAVE_GUEST';
 const LINK_GUESTS = 'LINK_GUESTS';
 const DELETE_GUEST = 'DELETE_GUEST';
+const UPDATE_GUEST = 'UPDATE_GUEST';
 
 const initState = { all: [], selected: null };
 
@@ -32,6 +33,18 @@ const LinkGuests = (ids) => {
     payload: request
   }
 }
+
+const UpdateGuest = (id, prop, value) => {
+  const request = axios.put(`/api/guest/${id}`, {update: {prop, value}});
+
+  return {
+    type: UPDATE_GUEST,
+    payload: request,
+    update: {
+      id, prop, value
+    }
+  }
+};
 
 const DeleteGuest = (id) => {
   const request = axios.delete(`/api/guest/${id}`);
@@ -62,6 +75,11 @@ const GuestsReducer = (state = initState, action) => {
       return Object.assign({}, state, {all: newArr});
     case DELETE_GUEST:
       return Object.assign({}, state, {all: state.all.filter(m => m._id !== action.id)});
+    case UPDATE_GUEST:
+      const copy = Object.assign({}, state);
+      const index = copy.all.findIndex(m => m._id === action.update.id);
+      copy.all[index][action.update.prop] = action.update.value;
+      return Object.assign({}, state, {all: copy.all});
   }
 
   return state;
@@ -69,4 +87,4 @@ const GuestsReducer = (state = initState, action) => {
 
 export default GuestsReducer;
 
-export {FetchGuests, SaveGuest, LinkGuests, DeleteGuest};
+export {FetchGuests, SaveGuest, LinkGuests, DeleteGuest, UpdateGuest};

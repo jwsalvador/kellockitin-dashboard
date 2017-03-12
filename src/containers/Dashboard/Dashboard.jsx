@@ -31,6 +31,10 @@ class MainView extends Component {
             <h1>{filterGuestsBy('type', 'ADT', this.props.guests).length}</h1>
           </Paper>
           <Paper style={style} zDepth={2}>
+            <h2>Total Teens</h2>
+            <h1>{filterGuestsBy('type', 'TGR', this.props.guests).length}</h1>
+          </Paper>
+          <Paper style={style} zDepth={2}>
             <h2>Total Children</h2>
             <h1>{filterGuestsBy('type', 'CHD', this.props.guests).length}</h1>
           </Paper>

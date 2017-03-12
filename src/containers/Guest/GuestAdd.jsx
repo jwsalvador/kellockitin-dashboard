@@ -92,6 +92,7 @@ class GuestAdd extends Component {
               onChange={this.changeGuestTypeHandler}>
               <MenuItem value={null} primaryText="" />
               <MenuItem value="ADT" primaryText="Adult" />
+              <MenuItem value="TGR" primaryText="Teen" />
               <MenuItem value="CHD" primaryText="Child" />
             </SelectField>
         </Dialog>

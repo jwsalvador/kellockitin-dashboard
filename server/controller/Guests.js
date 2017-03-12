@@ -33,6 +33,14 @@ const Find = (req, res) => {
   });
 };
 
+const Update = (req, res) => {
+  Guests.findByIdAndUpdate(req.params.id, {[req.body.update.prop]: req.body.update.value}, (err, doc) => {
+    return res.send({
+      success: true
+    })
+  });
+};
+
 const Delete = (req, res) => {
   Guests.findByIdAndRemove(req.params.id, (err, result) => {
 
@@ -95,7 +103,6 @@ const Link = (req, res) => {
   }
 
   const mainId = req.body.ids[0];
-  console.log(req.body.ids);
   Guests.update({_id: {'$in': req.body.ids}}, {groupId: mainId}, {multi: true}, (err, status) => {
     if (err || status.ok !== 1) {
       return res.send({guests: null})
@@ -115,5 +122,6 @@ module.exports = {
   Link,
   Find,
   Rsvp,
-  Delete
+  Delete,
+  Update
 }

@@ -19,6 +19,4 @@ config.devtool = 'source-map';
 
 config.entry = ['./src/index.jsx'];
 
-console.log(config)
-
 module.exports = config;
