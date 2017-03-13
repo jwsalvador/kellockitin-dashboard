@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {createReducer} from 'ducks/helpers';
 
 const FETCH_GUESTS = 'FETCH_GUESTS';
 const SAVE_GUEST = 'SAVE_GUEST';
@@ -56,34 +57,70 @@ const DeleteGuest = (id) => {
   }
 }
 
-const GuestsReducer = (state = initState, action) => {
-  switch(action.type) {
-    case FETCH_GUESTS:
-      return Object.assign({}, state, {all: action.payload.data.guests});
-    case SAVE_GUEST:
-      return Object.assign({}, state, {all: [...state.all, action.payload.data.guest]});
-    case LINK_GUESTS:
+const GuestsReducer = createReducer(initState, {
+
+  [FETCH_GUESTS](state, action) {
+    return Object.assign({}, state, {all: action.payload.data.guests});
+  },
+
+  [SAVE_GUEST](state, action) {
+    return Object.assign({}, state, {all: [...state.all, action.payload.data.guest]});
+  },
+
+  [LINK_GUESTS](state, action) {
     let newArr = [];
-      state.all.forEach((item, i) => {
-        let index = action.payload.data.guests.findIndex(m => m._id === item._id);
-        if (index > -1) {
-          newArr.push(Object.assign({}, action.payload.data.guests[index]));
-        } else {
-          newArr.push(item);
-        }
-      });
-      return Object.assign({}, state, {all: newArr});
-    case DELETE_GUEST:
-      return Object.assign({}, state, {all: state.all.filter(m => m._id !== action.id)});
-    case UPDATE_GUEST:
-      const copy = Object.assign({}, state);
-      const index = copy.all.findIndex(m => m._id === action.update.id);
-      copy.all[index][action.update.prop] = action.update.value;
-      return Object.assign({}, state, {all: copy.all});
+    state.all.forEach((item, i) => {
+      let index = action.payload.data.guests.findIndex(m => m._id === item._id);
+      if (index > -1) {
+        newArr.push(Object.assign({}, action.payload.data.guests[index]));
+      } else {
+        newArr.push(item);
+      }
+    });
+    return Object.assign({}, state, {all: newArr});
+  },
+
+  [DELETE_GUEST](state, action) {
+    return Object.assign({}, state, {all: state.all.filter(m => m._id !== action.id)});
+  },
+
+  [UPDATE_GUEST](state, action) {
+    const copy = Object.assign({}, state);
+    const index = copy.all.findIndex(m => m._id === action.update.id);
+    copy.all[index][action.update.prop] = action.update.value;
+    return Object.assign({}, state, {all: copy.all});
   }
 
-  return state;
-};
+})
+
+// const GuestsReducer = (state = initState, action) => {
+//   switch(action.type) {
+//     case FETCH_GUESTS:
+//       return Object.assign({}, state, {all: action.payload.data.guests});
+//     case SAVE_GUEST:
+//       return Object.assign({}, state, {all: [...state.all, action.payload.data.guest]});
+//     case LINK_GUESTS:
+//     let newArr = [];
+//       state.all.forEach((item, i) => {
+//         let index = action.payload.data.guests.findIndex(m => m._id === item._id);
+//         if (index > -1) {
+//           newArr.push(Object.assign({}, action.payload.data.guests[index]));
+//         } else {
+//           newArr.push(item);
+//         }
+//       });
+//       return Object.assign({}, state, {all: newArr});
+//     case DELETE_GUEST:
+//       return Object.assign({}, state, {all: state.all.filter(m => m._id !== action.id)});
+//     case UPDATE_GUEST:
+//       const copy = Object.assign({}, state);
+//       const index = copy.all.findIndex(m => m._id === action.update.id);
+//       copy.all[index][action.update.prop] = action.update.value;
+//       return Object.assign({}, state, {all: copy.all});
+//   }
+
+//   return state;
+// };
 
 export default GuestsReducer;
 

@@ -180,7 +180,7 @@ class GuestsList extends Component {
           <Toggle label="Show group" labelPosition="right" labelStyle={{fontSize: 11}} onToggle={this.toggleShowGroups}/>
         </div>
         { this.state.showCheckbox && this.renderLinkGuests() }
-        <List className="name">
+        <List style={{overflowY: 'scroll', maxHeight: 700}} className="name">
           {this.state.guests.filter(m => m._id !== this.state.mainLink).map(m => {
             let att = this.getGuestListItemAttributes(m);
             let nesteditems = [];
